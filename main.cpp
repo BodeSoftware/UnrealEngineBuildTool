@@ -6,10 +6,10 @@
 #include <iostream>
 #include <string>
 #include <filesystem>
-#include <algorithm> // Required for std::replace
+#include <algorithm> 
 #include <sstream>
-#include <limits>    // Required for std::numeric_limits
-#include <windows.h> // For WideCharToMultiByte
+#include <limits>    
+#include <windows.h> 
 
 using namespace UEBuilder;
 namespace fs = std::filesystem; // Define fs namespace alias here
@@ -42,7 +42,7 @@ int main() {
         std::cout << "Do you want to auto-install Visual Studio Build Tools? (y/n): ";
         char resp;
         std::cin >> resp;
-        // FIX: Only clear the buffer if we actually used cin above
+        // Only clear the buffer if we actually used cin above
         std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
 
         if (resp == 'y' || resp == 'Y') {
@@ -58,46 +58,78 @@ int main() {
     }
 
     // --- STEP 2: Project Selection ---
-    std::cout << "\nEnter path to .uproject file: ";
-    std::wstring projectPathStr;
+    std::cout << "\nEnter path to the Unreal Project FOLDER (or the .uproject file): ";
+    std::wstring inputPathStr;
 
-    // FIX: Removed unconditional ignore() here that was causing the freeze
-    std::getline(std::wcin, projectPathStr);
+    std::getline(std::wcin, inputPathStr);
 
-    if (!projectPathStr.empty()) {
+    if (!inputPathStr.empty()) {
         // 1. Trim leading and trailing whitespace
-        projectPathStr.erase(0, projectPathStr.find_first_not_of(L" \t\n\r"));
-        projectPathStr.erase(projectPathStr.find_last_not_of(L" \t\n\r") + 1);
+        inputPathStr.erase(0, inputPathStr.find_first_not_of(L" \t\n\r"));
+        inputPathStr.erase(inputPathStr.find_last_not_of(L" \t\n\r") + 1);
 
         // 2. Sanitize quotes from drag-and-drop
-        if (projectPathStr.front() == L'"') projectPathStr.erase(0, 1);
-        if (projectPathStr.back() == L'"') projectPathStr.pop_back();
+        if (inputPathStr.front() == L'"') inputPathStr.erase(0, 1);
+        if (inputPathStr.back() == L'"') inputPathStr.pop_back();
 
-        // 3. FIX: Check for and correct the common missing drive letter issue (e.g., if 'C' was dropped)
-        if (projectPathStr.length() > 1 && projectPathStr[1] == L':' && projectPathStr[0] == L'/') {
-            // If the path starts with /C:/ (caused by the initial path sanitization + the input error), remove the leading slash.
-            projectPathStr.erase(0, 1);
+        // 3. Path sanitization fix (for common missing drive letter issue)
+        if (inputPathStr.length() > 1 && inputPathStr[1] == L':' && inputPathStr[0] == L'/') {
+            inputPathStr.erase(0, 1);
         }
-        else if (projectPathStr.length() > 1 && projectPathStr[1] == L'/' && (projectPathStr[0] >= L'A' && projectPathStr[0] <= L'Z')) {
-            // If path looks like C/Unreal Projects... (missing the colon), add it. This is a heuristic guess.
-            projectPathStr.insert(1, L":");
-        }
-        else if (projectPathStr.length() > 2 && projectPathStr[0] == L'/' && (projectPathStr[1] >= L'A' && projectPathStr[1] <= L'Z') && projectPathStr[2] == L'/') {
-            // A common case: /C/Unreal Projects -> needs to be C:/Unreal Projects
-            // Standardize path separators (\\ to /) AFTER quotes are gone.
-            // But for the input error, we will replace backslashes below.
+        else if (inputPathStr.length() > 1 && inputPathStr[1] == L'/' && (inputPathStr[0] >= L'A' && inputPathStr[0] <= L'Z')) {
+            inputPathStr.insert(1, L":");
         }
 
         // 4. Standardize path separators (use forward slashes for filesystem consistency)
-        std::replace(projectPathStr.begin(), projectPathStr.end(), L'\\', L'/');
+        std::replace(inputPathStr.begin(), inputPathStr.end(), L'\\', L'/');
     }
 
-    if (!fs::exists(projectPathStr)) {
-        std::cerr << "[Error] File does not exist. Please check the path carefully.\n";
-        std::wcout << L"Attempted Path: " << projectPathStr << std::endl;
+    fs::path targetPath(inputPathStr);
+    std::wstring projectPathStr;
+
+    if (targetPath.extension() == L".uproject") {
+        // Case 1: User pasted the full .uproject file path
+        projectPathStr = targetPath.wstring();
+    }
+    else if (fs::is_directory(targetPath)) {
+        // Case 2: User pasted the project folder path (the preferred method)
+        std::wcout << L"[Info] Searching for .uproject file in folder: " << targetPath.wstring() << std::endl;
+
+        // Iterate through the directory to find the first .uproject file
+        bool found = false;
+        for (const auto& entry : fs::directory_iterator(targetPath)) {
+            if (entry.is_regular_file() && entry.path().extension() == L".uproject") {
+                projectPathStr = entry.path().wstring();
+                std::wcout << L"[Info] Auto-detected .uproject file: " << entry.path().filename().wstring() << std::endl;
+                found = true;
+                break; // Use the first one found
+            }
+        }
+
+        if (!found) {
+            std::cerr << "[Error] No .uproject file found inside the provided directory.\n";
+            std::wcout << L"Attempted Folder: " << targetPath.wstring() << std::endl;
+            system("pause");
+            return 1;
+        }
+
+    }
+    else {
+        // Case 3: Invalid path provided (neither file nor folder exists)
+        std::cerr << "[Error] Path does not exist or is invalid. Please check the path carefully.\n";
+        std::wcout << L"Attempted Path: " << targetPath.wstring() << std::endl;
         system("pause");
         return 1;
     }
+
+    // FINAL CHECK: Ensure the resolved path exists (it should if logic above worked)
+    if (!fs::exists(projectPathStr)) {
+        std::cerr << "[Fatal Error] The resolved .uproject path does not exist.\n";
+        std::wcout << L"Resolved Path: " << projectPathStr << std::endl;
+        system("pause");
+        return 1;
+    }
+
 
     // --- STEP 3: Engine Detection ---
     std::wstring association = EngineDetector::GetEngineAssociation(projectPathStr);
@@ -105,6 +137,8 @@ int main() {
 
     EngineInfo engine = EngineDetector::FindEngine(association);
     if (!engine.IsValid) {
+        // NOTE: The FindEngine function now includes a manual input fallback if registry fails.
+        // This check only runs if the final result of FindEngine is still invalid (i.e., user didn't enter a valid path manually).
         std::cerr << "[Error] Could not locate Unreal Engine installation for version "
             << WStringToString(association) << "\n";
         std::cerr << "Ensure the engine is registered or try generating project files manually once.\n";
