@@ -11,7 +11,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
-qt_add_executable(UnrealEngineBuildTool_QT main.cpp mainwindow.cpp mainwindow.ui)
+# ADDED: Let Qt see the backend headers in the parent folder
+include_directories(..)
+
+qt_add_executable(UnrealEngineBuildTool_QT
+    main.cpp               # Qt main file
+    mainwindow.cpp
+    mainwindow.h
+    mainwindow.ui
+
+    # (Optional but recommended to show them inside QtCreator)
+    ../EngineDetector.h
+    ../ProcessUtils.h
+    ../ToolchainManager.h
+)
 
 target_link_libraries(UnrealEngineBuildTool_QT PRIVATE Qt6::Widgets)
 

@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -25,11 +26,16 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QLineEdit *projectPathEdit;
-    QPushButton *browseButton;
-    QPushButton *buildButton;
-    QPushButton *cancelButton;
     QPlainTextEdit *logOutput;
+    QWidget *horizontalLayoutWidget;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *buildButton;
+    QPushButton *cleanButton;
+    QPushButton *cancelButton;
+    QWidget *horizontalLayoutWidget_2;
+    QHBoxLayout *horizontalLayout_2;
+    QPushButton *browseButton;
+    QLineEdit *projectPathEdit;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -40,21 +46,48 @@ public:
         MainWindow->resize(800, 600);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        projectPathEdit = new QLineEdit(centralwidget);
-        projectPathEdit->setObjectName("projectPathEdit");
-        projectPathEdit->setGeometry(QRect(230, 40, 321, 20));
-        browseButton = new QPushButton(centralwidget);
-        browseButton->setObjectName("browseButton");
-        browseButton->setGeometry(QRect(130, 40, 80, 18));
-        buildButton = new QPushButton(centralwidget);
-        buildButton->setObjectName("buildButton");
-        buildButton->setGeometry(QRect(170, 100, 80, 18));
-        cancelButton = new QPushButton(centralwidget);
-        cancelButton->setObjectName("cancelButton");
-        cancelButton->setGeometry(QRect(350, 100, 80, 18));
         logOutput = new QPlainTextEdit(centralwidget);
         logOutput->setObjectName("logOutput");
         logOutput->setGeometry(QRect(10, 140, 631, 161));
+        horizontalLayoutWidget = new QWidget(centralwidget);
+        horizontalLayoutWidget->setObjectName("horizontalLayoutWidget");
+        horizontalLayoutWidget->setGeometry(QRect(120, 70, 411, 61));
+        horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
+        horizontalLayout->setSpacing(50);
+        horizontalLayout->setObjectName("horizontalLayout");
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        buildButton = new QPushButton(horizontalLayoutWidget);
+        buildButton->setObjectName("buildButton");
+
+        horizontalLayout->addWidget(buildButton);
+
+        cleanButton = new QPushButton(horizontalLayoutWidget);
+        cleanButton->setObjectName("cleanButton");
+        cleanButton->setEnabled(false);
+
+        horizontalLayout->addWidget(cleanButton);
+
+        cancelButton = new QPushButton(horizontalLayoutWidget);
+        cancelButton->setObjectName("cancelButton");
+
+        horizontalLayout->addWidget(cancelButton);
+
+        horizontalLayoutWidget_2 = new QWidget(centralwidget);
+        horizontalLayoutWidget_2->setObjectName("horizontalLayoutWidget_2");
+        horizontalLayoutWidget_2->setGeometry(QRect(50, 10, 541, 51));
+        horizontalLayout_2 = new QHBoxLayout(horizontalLayoutWidget_2);
+        horizontalLayout_2->setObjectName("horizontalLayout_2");
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        browseButton = new QPushButton(horizontalLayoutWidget_2);
+        browseButton->setObjectName("browseButton");
+
+        horizontalLayout_2->addWidget(browseButton);
+
+        projectPathEdit = new QLineEdit(horizontalLayoutWidget_2);
+        projectPathEdit->setObjectName("projectPathEdit");
+
+        horizontalLayout_2->addWidget(projectPathEdit);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -72,9 +105,11 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        browseButton->setText(QCoreApplication::translate("MainWindow", "Browse", nullptr));
         buildButton->setText(QCoreApplication::translate("MainWindow", "Build", nullptr));
+        cleanButton->setText(QCoreApplication::translate("MainWindow", "Clean", nullptr));
         cancelButton->setText(QCoreApplication::translate("MainWindow", "Cancel", nullptr));
+        browseButton->setText(QCoreApplication::translate("MainWindow", "Browse", nullptr));
+        projectPathEdit->setText(QCoreApplication::translate("MainWindow", "... Project folder containing .uproject", nullptr));
     } // retranslateUi
 
 };

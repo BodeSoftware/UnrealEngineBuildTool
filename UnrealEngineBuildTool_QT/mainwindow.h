@@ -21,11 +21,18 @@ private slots:
     void onBrowseButtonClicked();
     void onBuildButtonClicked();
     void onCancelButtonClicked();
+    void onCleanButtonClicked();
 
 private:
     Ui::MainWindow *ui;
 
     void appendLog(const QString& text);
+
+    // --------------------------
+    // Build/Clean state tracking
+    // --------------------------
+    bool buildRunning = false;   // True only while a build is active
+    bool cleanNeeded = false;    // Becomes true if log suggests a clean is required
 };
 
 #endif // MAINWINDOW_H

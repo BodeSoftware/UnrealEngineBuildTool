@@ -473,6 +473,9 @@ UnrealEngineBuildTool_QT_autogen/timestamp: \
 	C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/Platform/Windows-MSVC.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/Platform/Windows.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/Platform/WindowsPaths.cmake \
+	S:/Code\ projects/UnrealEngineBuildTool/EngineDetector.h \
+	S:/Code\ projects/UnrealEngineBuildTool/ProcessUtils.h \
+	S:/Code\ projects/UnrealEngineBuildTool/ToolchainManager.h \
 	S:/Code\ projects/UnrealEngineBuildTool/UnrealEngineBuildTool_QT/CMakeLists.txt \
 	S:/Code\ projects/UnrealEngineBuildTool/UnrealEngineBuildTool_QT/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Release/.qtc/package-manager/auto-setup.cmake \
 	S:/Code\ projects/UnrealEngineBuildTool/UnrealEngineBuildTool_QT/build/Desktop_Qt_6_10_1_MSVC2022_64bit-Release/.qtc/package-manager/maintenance_tool_provider.cmake \

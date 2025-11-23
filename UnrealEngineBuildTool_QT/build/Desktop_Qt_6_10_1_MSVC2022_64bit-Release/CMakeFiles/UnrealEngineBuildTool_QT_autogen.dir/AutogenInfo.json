@@ -399,6 +399,24 @@
 	"HEADERS" : 
 	[
 		[
+			"S:/Code projects/UnrealEngineBuildTool/EngineDetector.h",
+			"MU",
+			"5O555V4JBC/moc_EngineDetector.cpp",
+			null
+		],
+		[
+			"S:/Code projects/UnrealEngineBuildTool/ProcessUtils.h",
+			"MU",
+			"5O555V4JBC/moc_ProcessUtils.cpp",
+			null
+		],
+		[
+			"S:/Code projects/UnrealEngineBuildTool/ToolchainManager.h",
+			"MU",
+			"5O555V4JBC/moc_ToolchainManager.cpp",
+			null
+		],
+		[
 			"S:/Code projects/UnrealEngineBuildTool/UnrealEngineBuildTool_QT/mainwindow.h",
 			"MU",
 			"EWIEGA46WW/moc_mainwindow.cpp",
@@ -430,6 +448,7 @@
 	],
 	"MOC_INCLUDES" : 
 	[
+		"S:/Code projects/UnrealEngineBuildTool",
 		"C:/Qt/6.10.1/msvc2022_64/include/QtCore",
 		"C:/Qt/6.10.1/msvc2022_64/include",
 		"C:/Qt/6.10.1/msvc2022_64/mkspecs/win32-msvc",
