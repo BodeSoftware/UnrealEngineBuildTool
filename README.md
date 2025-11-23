@@ -2,21 +2,23 @@
 
 Automatically build Unreal Engine C++ projects for non-programmers.
 
-🚀 Overview
+# 🚀 Overview
 
 The UnrealEngineBuildTool (UEBuilder) is a lightweight, standalone command-line application designed to simplify the process of compiling Unreal Engine C++ code. It eliminates the need to manually execute the full Unreal Build Tool (UBT) command line, set up environment variables, or rely on a functional Visual Studio installation.
 
 It automatically performs necessary checks, suchates the correct engine version, and presents a simple menu to choose your build configuration (Development, DebugGame, Shipping) and target (Editor or Standalone Game).
 
-🛠️ Usage for End-Users (Using the UEBuilder.exe File)
+# 🛠️ Usage for End-Users (Using the UEBuilder.exe File)
 
 This is the recommended path for non-programmers who simply need to compile C++ code within a project.
 
-Prerequisites
+## Prerequisites
 
-Visual Studio Build Tools: The tool will automatically check for and offer to install the required Microsoft Visual C++ Build Tools and Windows SDK if they are missing. This is necessary for C++ compilation to work.
+Microsoft Visual C++ Build Tools: While this application removes the need for the complex Visual Studio interface (IDE), C++ code still requires the underlying Microsoft Visual C++ Compiler and Build Tools to function.
 
-Execution Steps
+The tool will automatically check for and offer to install the required Build Tools and Windows SDK if they are missing. This step is necessary for C++ compilation to work.
+
+## Execution Steps
 
 Launch: Double-click the UEBuilder.exe file.
 
@@ -36,10 +38,11 @@ Target: (e.g., Editor for fast iteration, Game for a final executable)
 
 Build: Select option 3. BUILD PROJECT to start the compilation process. The build log will be streamed directly to the console in real-time.
 
-💻 Building from Source (For Developers)
+# 💻 Building from Source (For Developers)
 
 This section is for users who want to modify the UEBuilder source code or build the executable themselves.
 
 Compile and Link: Use the Microsoft Visual C++ compiler (cl) command: 
 
 "cl main.cpp /EHsc /std:c++17 /Fe:UEBuilder.exe"
+
