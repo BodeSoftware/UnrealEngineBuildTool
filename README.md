@@ -4,48 +4,172 @@ Automatically build Unreal Engine C++ projects for non-programmers.
 
 # 🚀 Overview
 
-The UnrealEngineBuildTool (UEBuilder) is a lightweight, standalone command-line application designed to simplify the process of compiling Unreal Engine C++ code. It eliminates the need to manually execute the full Unreal Build Tool (UBT) command line, set up environment variables, or rely on a functional Visual Studio installation.
+UEBuilder is a standalone tool (CLI + GUI) that allows non-programmers and team members without Visual Studio to build Unreal Engine C++ projects easily.
 
-It automatically performs necessary checks, suchates the correct engine version, and presents a simple menu to choose your build configuration (Development, DebugGame, Shipping) and target (Editor or Standalone Game).
+It removes the need for:
 
-# 🛠️ Usage for End-Users (Using the UEBuilder.exe File)
+Opening Visual Studio
 
-This is the recommended path for non-programmers who simply need to compile C++ code within a project.
+Understanding UBT command-line syntax
+
+Running complicated batch files
+
+Configuring build environments manually
+
+UEBuilder automatically:
+
+Detects the correct Unreal Engine installation
+
+Finds the right UnrealBuildTool.exe
+
+Validates that the MSVC Build Tools are installed
+
+Builds your C++ project with correct parameters
+
+Streams build output in real time
+
+Detects when a Clean is required (Intermediate issues)
+
+Can automatically clean & rebuild
+
+UEBuilder supports both:
+
+✔ Command-Line Mode (legacy)
+✔ Full Qt6 GUI Mode (new)
+
+## 🖥️ New GUI Application (Qt6)
+
+The new UEBuilder GUI is a fully interactive Windows application that offers:
+
+✔ Browse button for selecting projects
+✔ Live build log with color-coded errors
+✔ Build button (auto-disabled during build)
+✔ Cancel button
+✔ Auto “Clean Project” detection
+✔ One-click Clean → Rebuild
+✔ Real-time UBT output streaming
+✔ Error highlighting
+✔ No coding knowledge required
+
+This version is ideal for:
+
+Designers
+
+Producers
+
+Artists
+
+QA testers
+
+Anyone who needs to build the project without touching Visual Studio
+
+## 🛠️ GUI Usage Instructions
+1. Launch the app
+
+Run:
+
+UnrealEngineBuildTool_QT.exe
+
+2. Select your Unreal Engine project
+
+Click Browse, then select either:
+
+The project folder, or
+
+The .uproject file
+
+The tool automatically detects the engine version and location.
+
+3. Press Build
+
+UEBuilder will:
+
+Check MSVC Build Tools
+
+Resolve the .uproject
+
+Detect the engine
+
+Run UnrealBuildTool
+
+Stream output live
+
+4. Error Detection
+
+Errors appear in red text.
+
+If the tool detects Intermediate/Saved/Binaries corruption, the Clean button becomes available.
+
+5. Clean & Auto-Rebuild
+
+Click Clean to automatically remove:
+
+Intermediate/
+Saved/
+Binaries/
+
+
+Then the tool will automatically rebuild.
+
+### 🖥️ Command Line Version (Legacy Mode)
+
+Still included and usable — especially for automation or scripting.
+
+How to Run
+UEBuilder.exe
+
+Features
+
+Engine detection
+
+Build config selection
+
+Automatic MSVC check
+
+Real-time build output
+
+No Visual Studio required
+
+Typical CLI Flow
+
+Enter project directory
+
+UEBuilder finds the .uproject
+
+UEBuilder locates the correct Unreal Engine
+
+Choose build type (Development, Shipping, etc.)
+
+Build
 
 ## Prerequisites
 
-Microsoft Visual C++ Build Tools: While this application removes the need for the complex Visual Studio interface (IDE), C++ code still requires the underlying Microsoft Visual C++ Compiler and Build Tools to function.
+Even though UEBuilder avoids using Visual Studio, you still need:
 
-The tool will automatically check for and offer to install the required Build Tools and Windows SDK if they are missing. This step is necessary for C++ compilation to work.
+✔ Microsoft Visual C++ Build Tools
+✔ Windows 10/11 SDK
 
-## Execution Steps
-
-Launch: Double-click the UEBuilder.exe file.
-
-Project Selection: When prompted, enter the file path to your Unreal Engine Project FOLDER.
-
-Example: C:\Users\YourName\Documents\Unreal Projects\MyGameProject
-
-Note: The tool automatically detects the .uproject file inside the folder.
-
-Engine Detection: The tool reads the project file, determines the associated Unreal Engine version (e.g., 5.3), and automatically locates the correct UnrealBuildTool.exe on your system.
-
-Select Build Options: Use the menu (1, 2, 3) to select:
-
-Configuration: (e.g., Development, Shipping)
-
-Target: (e.g., Editor for fast iteration, Game for a final executable)
-
-Build: Select option 3. BUILD PROJECT to start the compilation process. The build log will be streamed directly to the console in real-time.
+UEBuilder automatically detects missing components and prompts the user.
 
 # 💻 Building from Source (For Developers)
 
-This section is for users who want to modify the UEBuilder source code or build the executable themselves.
+To compile the CLI version manually:
 
-Compile and Link: Use the Microsoft Visual C++ compiler (cl) command: 
+cl main.cpp /EHsc /std:c++17 /Fe:UEBuilder.exe
 
-"cl main.cpp /EHsc /std:c++17 /Fe:UEBuilder.exe"
 
-## Future improvements
-Add GUI
+To build the GUI version, use Qt Creator:
 
+Open CMakeLists.txt
+
+Configure with Qt6 (MSVC 64-bit)
+
+Build normally
+
+Dependencies:
+
+Qt6 Widgets
+
+CMake 3.16+
+
+MSVC 2022 toolchain
